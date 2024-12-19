@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель управления | SINACHA TG</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #00ff88;
+            --primary-dark: #00cc6a;
+            --secondary-color: #00ffcc;
+            --accent-color: #66ffee;
+            --background-color: #0a0f1a;
+            --card-background: rgba(16, 23, 42, 0.95);
+            --success-color: #00ff88;
+            --error-color: #ff3366;
+            --warning-color: #ffaa00;
+            --text-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(0, 255, 136, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 204, 0.15) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+            animation: gradientMove 15s ease infinite;
+        }
+
+        .navbar {
+            background: var(--card-background);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .logo i {
+            font-size: 1.2rem;
+            color: var(--background-color);
+        }
+
+        .brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: var(--text-color);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+            color: var(--primary-color);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 100px auto 0;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-background);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .stat-title {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+        }
+
+        .stat-footer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--success-color);
+        }
+
+        .messages-section {
+            background: var(--card-background);
+            border-radius: 24px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            background: var(--primary-color);
+            color: var(--background-color);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+        }
+
+        .messages-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.5rem;
+        }
+
+        .messages-table th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--text-color);
+            opacity: 0.8;
+            font-weight: 500;
+        }
+
+        .messages-table td {
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .messages-table tr td:first-child {
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .messages-table tr td:last-child {
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: rgba(255, 170, 0, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-running {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-completed {
+            background: rgba(102, 255, 238, 0.1);
+            color: var(--accent-color);
+        }
+
+        .status-failed {
+            background: rgba(255, 51, 102, 0.1);
+            color: var(--error-color);
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            color: var(--primary-color);
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-background);
+            border-radius: 24px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .close-modal {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(0, 255, 136, 0.2);
+            border-radius: 12px;
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 0%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            100% {
+                background-position: 0% 0%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .messages-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fab fa-telegram-plane"></i>
+                </div>
+                <span class="brand">SINACHA TG</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    Статистика
+                </a>
+                <a href="#" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    Настройки
+                </a>
+                <a href="/logout" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="dashboard-grid">
+            <div class="stat-card">
+                <div class="stat-title">Всего сообщений</div>
+                <div class="stat-value">{{ stats.total_messages }}</div>
+                <div class="stat-footer">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>{{ stats.messages_growth }}% за последние 7 дней</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Успешно отправлено</div>
+                <div class="stat-value">{{ stats.successful_messages }}</div>
+                <div class="stat-footer">
+                    <i class="fas fa-check-circle"></i>
+                    <span>{{ stats.success_rate }}% успешных отправок</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Активные рассылки</div>
+                <div class="stat-value">{{ stats.active_campaigns }}</div>
+                <div class="stat-footer">
+                    <i class="fas fa-clock"></i>
+                    <span>{{ stats.pending_messages }} сообщений в очереди</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="messages-section">
+            <div class="section-header">
+                <h2 class="section-title">Рассылки</h2>
+                <button class="btn" onclick="openNewMessageModal()">
+                    <i class="fas fa-plus"></i>
+                    Новая рассылка
+                </button>
+            </div>
+
+            <table class="messages-table">
+                <thead>
+                    <tr>
+                        <th>Текст</th>
+                        <th>Получатели</th>
+                        <th>Статус</th>
+                        <th>Прогресс</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in messages %}
+                    <tr>
+                        <td>{{ message.text[:50] }}...</td>
+                        <td>{{ message.targets }}</td>
+                        <td>
+                            <span class="status-badge status-{{ message.status }}">
+                                {{ message.status }}
+                            </span>
+                        </td>
+                        <td>{{ message.sent_count }}/{{ message.total_count }}</td>
+                        <td>
+                            <button class="action-btn" title="Редактировать">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn" title="Удалить">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Модальное окно новой рассылки -->
+    <div id="newMessageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Новая рассылка</h3>
+                <button class="close-modal" onclick="closeNewMessageModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="newMessageForm" onsubmit="handleNewMessage(event)">
+                <div class="form-group">
+                    <label for="targets">Получатели (через запятую)</label>
+                    <input type="text" id="targets" class="form-control" 
+                           placeholder="@username, chat_id" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Текст сообщения</label>
+                    <textarea id="message" class="form-control" 
+                             placeholder="Введите текст сообщения..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="interval">Интервал между отправками (в секундах)</label>
+                    <input type="number" id="interval" class="form-control" 
+                           min="0" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="repeatCount">Количество повторов</label>
+                    <input type="number" id="repeatCount" class="form-control" 
+                           min="1" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="startTime">Время начала</label>
+                    <input type="datetime-local" id="startTime" class="form-control">
+                </div>
+                <button type="submit" class="btn">
+                    <i class="fas fa-paper-plane"></i>
+                    Создать рассылку
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openNewMessageModal() {
+            document.getElementById('newMessageModal').classList.add('active');
+        }
+
+        function closeNewMessageModal() {
+            document.getElementById('newMessageModal').classList.remove('active');
+        }
+
+        async function handleNewMessage(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const button = form.querySelector('button[type="submit"]');
+            
+            try {
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Создание...';
+                
+                const formData = {
+                    targets: document.getElementById('targets').value,
+                    text: document.getElementById('message').value,
+                    interval: parseInt(document.getElementById('interval').value),
+                    repeat_count: parseInt(document.getElementById('repeatCount').value),
+                    start_time: document.getElementById('startTime').value
+                };
+                
+                const response = await fetch('/schedule_message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    closeNewMessageModal();
+                    location.reload(); // Перезагружаем страницу для обновления списка
+                } else {
+                    alert(data.error || 'Ошибка при создании рассылки');
+                }
+            } catch (error) {
+                alert('Ошибка сервера. Попробуйте позже.');
+                console.error('Error:', error);
+            } finally {
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-paper-plane"></i> Создать рассылку';
+            }
+        }
+
+        // Устанавливаем минимальное время для поля startTime
+        document.addEventListener('DOMContentLoaded', () => {
+            const startTimeInput = document.getElementById('startTime');
+            const now = new Date();
+            now.setMinutes(now.getMinutes() + 1); // Минимум через 1 минуту
+            startTimeInput.min = now.toISOString().slice(0, 16);
+            startTimeInput.value = now.toISOString().slice(0, 16);
+        });
+    </script>
+</body>
+</html>
